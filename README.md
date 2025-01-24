@@ -1,2 +1,2 @@
-# API_PetShop
-Atividade 1 - Disciplina PW1
+# Gerenciador-de-petshop
+Atividade 1 de PW1
