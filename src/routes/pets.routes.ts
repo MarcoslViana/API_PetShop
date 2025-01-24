@@ -6,12 +6,12 @@ const routesPet = Router();
 
 let petshops: PetShop[] = [];
 
-routesPet.get('/', verifyExistingAccount, (req, res) => {
+routesPet.get('/pets', verifyExistingAccount, (req, res) => {
     res.status(200).json(req.petshop.pets);
     return;
 });
 
-routesPet.post('/', verifyExistingAccount, (req, res) => {
+routesPet.post('/pets', verifyExistingAccount, (req, res) => {
     const infos = req.body as Pets;
     const newPet: Pets | null = {
         id: CreateID(),

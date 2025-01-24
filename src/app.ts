@@ -8,8 +8,8 @@ const app = express();
 app.use(express.json());
 
 //Rotas
-app.use('/petshops', routesPetShop);
-app.use('/pets', routesPet);
+app.use(routesPetShop);
+app.use(routesPet);
 //app.use('/remaining', routesR);
 
 export default app;

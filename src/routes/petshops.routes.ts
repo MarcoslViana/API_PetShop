@@ -6,7 +6,7 @@ import { v4 as CreateID } from "uuid";
 
 const routesPetShop = Router();
 
-routesPetShop.post('/', verifyCNPJ, verifyCNPJ_Petshop, (req, res) => {
+routesPetShop.post('/petshops', verifyCNPJ, verifyCNPJ_Petshop, (req, res) => {
     const infos = req.body as PetShop; 
     const newPetshop: PetShop | null = {
         id: CreateID(),
