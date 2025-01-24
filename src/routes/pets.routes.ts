@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { verifyExistingAccount } from "../middlewares/verifyExistingAccount";
+import petshops from "../data/petshops";
 import { v4 as CreateID } from "uuid";
 
 const routesPet = Router();
 
-let petshops: PetShop[] = [];
+//let petshops: PetShop[] = [];
 
 routesPet.get('/pets', verifyExistingAccount, (req, res) => {
     res.status(200).json(req.petshop.pets);
@@ -49,9 +50,14 @@ routesPet.put('/pets/:id', verifyExistingAccount, (req, res) => {
         ? new Date(deadline_vaccination)
         : pet.deadline_vaccination;
 
-    petshops = petshops.map(petshop =>
+    const petshopIndex = petshops.findIndex(petshop => petshop.id === req.petshop.id);
+    if (petshopIndex !== -1) {
+        petshops[petshopIndex] = req.petshop;
+    }
+
+    /* petshops = petshops.map(petshop =>
         petshop.id === req.petshop.id ? req.petshop : petshop
-    );
+    ); */
 
     res.status(200).json({message: "Informações do pet atualizadas", pet});
     return ;
@@ -60,9 +66,9 @@ routesPet.put('/pets/:id', verifyExistingAccount, (req, res) => {
 routesPet.patch('/pets/:id/vaccinated', verifyExistingAccount, (req, res) => {
     const petID = req.params.id;
     let verify = false;
-    req.petshop.pets.forEach(element => {
-        if(element.id == petID) {
-            element.vaccinated = true;
+    req.petshop.pets.forEach(pet => {
+        if(pet.id == petID) {
+            pet.vaccinated = true;
             verify = true;
         } 
     });
@@ -72,9 +78,14 @@ routesPet.patch('/pets/:id/vaccinated', verifyExistingAccount, (req, res) => {
         return;
     }
 
-    petshops = petshops.map(petshop =>
+    const petshopIndex = petshops.findIndex(petshop => petshop.id === req.petshop.id);
+    if (petshopIndex !== -1) {
+        petshops[petshopIndex] = req.petshop;
+    }
+
+    /* petshops = petshops.map(petshop =>
         petshop.id === req.petshop.id ? req.petshop : petshop
-    );
+    ); */
 
     res.status(200).json({message: "Pet vacinado"});
     return;
@@ -83,17 +94,25 @@ routesPet.patch('/pets/:id/vaccinated', verifyExistingAccount, (req, res) => {
 
 routesPet.delete('/pets/:id', verifyExistingAccount, (req, res) => {
     const petID = req.params.id;
-    const newList = req.petshop.pets.filter(pet => pet.id !== petID);
+    //const newList = req.petshop.pets.filter(pet => pet.id !== petID);
+    const initialLength = req.petshop.pets.length;
 
-    if (req.petshop.pets.length === newList.length) {
+    req.petshop.pets = req.petshop.pets.filter(pet => pet.id !== petID);
+
+    if (req.petshop.pets.length === initialLength) {
         res.status(404).json({error: "Pet não encontrado"});
         return ;
     }
     
-    req.petshop.pets = newList;
+    const petshopIndex = petshops.findIndex(petshop => petshop.id === req.petshop.id);
+    if (petshopIndex !== -1) {
+        petshops[petshopIndex] = req.petshop;
+    }
+
+    /* req.petshop.pets = newList;
     petshops = petshops.map(petshop =>
         petshop.id === req.petshop.id ? req.petshop : petshop
-    );
+    ); */
 
     res.status(200).json({message: "Pet deletado do sistema"});
     return;
